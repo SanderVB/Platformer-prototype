@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -15,11 +16,11 @@ TagManager:
   - 
   - Ground
   - Climbing
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Background
+  - Enemy
+  - Hazards
+  - Interactibles
   - 
   - 
   - 
@@ -44,6 +45,18 @@ TagManager:
   - name: Background
     uniqueID: 3276336849
     locked: 0
+  - name: Enemy
+    uniqueID: 3864930493
+    locked: 0
+  - name: Hazards
+    uniqueID: 2845898337
+    locked: 0
+  - name: Player
+    uniqueID: 1900925263
+    locked: 0
   - name: Foreground
     uniqueID: 2806905613
+    locked: 0
+  - name: Interactibles
+    uniqueID: 453939163
     locked: 0
