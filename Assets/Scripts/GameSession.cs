@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameSession : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] TextMeshProUGUI livesText;
 
     int score = 0;
     int lives = 3;
@@ -22,6 +25,17 @@ public class GameSession : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        UIUpdate();
+    }
+
+    private void UIUpdate()
+    {
+        scoreText.text = score.ToString("00000");
+        livesText.text = lives.ToString();
+    }
+
     public int GetScore()
     {
         return score;
@@ -30,6 +44,7 @@ public class GameSession : MonoBehaviour
     public void AddToScore(int scoreToAdd)
     {
         score += scoreToAdd;
+        UIUpdate();
     }
 
     public int GetLives()
@@ -40,6 +55,7 @@ public class GameSession : MonoBehaviour
     public void AddToLives(int livesToAdd)
     {
         lives += livesToAdd;
+        UIUpdate();
     }
 
     public bool GameOver()

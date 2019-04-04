@@ -27,10 +27,10 @@ public class LevelLoader : MonoBehaviour
     private void Start()
     {
         SetSceneIndex();
-        //if (currentSceneIndex == 0) for splash screen
-        //{
-        //    StartCoroutine(WaitAndLoadGameLevel(1, loadDelay));
-        // }
+        if (currentSceneIndex == 0) //for splash screen
+        {
+            StartCoroutine(WaitAndLoadGameLevel(1, loadDelay));
+        }
     }
 
     private void Update()
@@ -43,14 +43,15 @@ public class LevelLoader : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(newLoadDelay);
         SceneManager.LoadScene(loadIndex);
-        //FindObjectOfType<MusicPlayer>().MusicChanger(loadIndex);
+        FindObjectOfType<MusicPlayer>().MusicChanger(loadIndex);
         sceneUpdated = false;
         Time.timeScale = 1f;
     }
 
     public void BackToMainMenu()
     {
-        WaitAndLoadGameLevel(0, loadDelay);
+        Debug.Log("back to main");
+        StartCoroutine(WaitAndLoadGameLevel(1, loadDelay));
     }
 
     public void LoadNextlevel()

@@ -19,8 +19,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4864718587174458}
-  - component: {fileID: 95767913252422160}
   - component: {fileID: 114160903660078390}
+  - component: {fileID: 95767913252422160}
   - component: {fileID: 212021536749384200}
   - component: {fileID: 50866985395385632}
   - component: {fileID: 70465416822480610}
@@ -142,10 +142,11 @@ MonoBehaviour:
   jumpCooldown: 0.25
   landThreshold: 20
   scaleSize: 1.5
-  hurtCooldown: 3
+  hurtCooldown: 2
   hurtKick: {x: 10, y: 15}
-  hurtSound: {fileID: 0}
-  deathSound: {fileID: 0}
+  jumpSound: {fileID: 8300000, guid: 9e051a897410e9646a5891d9a2f0add7, type: 3}
+  hurtSound: {fileID: 8300000, guid: 4dc55b762e244a948963515c8b19c6cc, type: 3}
+  deathSound: {fileID: 8300000, guid: af47a889159f57e459f2526e7f61b8bc, type: 3}
 --- !u!212 &212021536749384200
 SpriteRenderer:
   m_ObjectHideFlags: 1

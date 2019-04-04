@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PickupController : MonoBehaviour {
 
-    [SerializeField] int pickupValue;
+    private enum PickupType { coin, extraLife}
+    [SerializeField] PickupType pickupType;
     [SerializeField] AudioClip pickupSound;
+    [SerializeField] int pickupValue;
     bool pickedUp = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -20,8 +22,12 @@ public class PickupController : MonoBehaviour {
     private void Pickup()
     {
         pickedUp = true;
-        AudioSource.PlayClipAtPoint(pickupSound, Camera.main.transform.position);
-        FindObjectOfType<GameSession>().AddToScore(pickupValue);
+        AudioSource.PlayClipAtPoint(pickupSound, this.transform.position);
+        if(pickupType == PickupType.coin)
+            FindObjectOfType<GameSession>().AddToScore(pickupValue);
+        if (pickupType == PickupType.extraLife)
+            FindObjectOfType<GameSession>().AddToLives(pickupValue);
+
         Destroy(gameObject);
     }
 }

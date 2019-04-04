@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
 {
     //Customizable values for character controls
     [Header("Character values")]
-    [SerializeField] int health = 3;
+    [Tooltip("in seconds")][SerializeField] float maxHealth = 30f;
+    [Tooltip("seconds to substract")] [SerializeField] float contactDamage = 10f;
     [SerializeField] float runSpeed = 8f;
     [SerializeField] float jumpSpeed = 15f;
     [SerializeField] float climbSpeed = 15f;
@@ -20,6 +21,9 @@ public class PlayerController : MonoBehaviour
     [Header("Hurt status")]
     [SerializeField] float hurtCooldown = 2f;
     [SerializeField] Vector2 hurtKick = new Vector2(10f, 10f);
+
+    [Header("Sounds")]
+    [SerializeField] AudioClip jumpSound;
     [SerializeField] AudioClip hurtSound;
     [SerializeField] AudioClip deathSound;
 
@@ -28,6 +32,7 @@ public class PlayerController : MonoBehaviour
     bool isGrounded, isJumping, hasHorizontalSpeed, facingRight;
 
     float hurtTimer, jumpTimer;
+    public float currentHealth;
     float animationCooldown = 0.5f;
 
     Coroutine cooldownTimer;
@@ -39,8 +44,14 @@ public class PlayerController : MonoBehaviour
     BoxCollider2D feetCollider;
 
     // Use this for initialization
+    private void Awake()
+    {
+        currentHealth = maxHealth;
+    }
+
     void Start()
     {
+        currentHealth = maxHealth;
         myRB2D = GetComponent<Rigidbody2D>();
         myAnim = GetComponent<Animator>();
         bodyCollider = GetComponent<CapsuleCollider2D>();
@@ -51,6 +62,8 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (!isAlive) { return; }
+
+        currentHealth -= Time.deltaTime;
 
         if (!onCooldown)
         {
@@ -98,6 +111,7 @@ public class PlayerController : MonoBehaviour
         if (CrossPlatformInputManager.GetButtonDown("Jump") && isGrounded) //is the jump button pressed and is the character on solid ground? Then jump
         {
             isJumping = true;
+            AudioSource.PlayClipAtPoint(jumpSound, this.transform.position);
             Vector2 jumpVelocityToAdd = new Vector2(0f, jumpSpeed);
             myRB2D.velocity += jumpVelocityToAdd;
         }
@@ -157,10 +171,11 @@ public class PlayerController : MonoBehaviour
 
         else if (bodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")) || bodyCollider.IsTouchingLayers(LayerMask.GetMask("Hazards")))
         {
-            if (!onCooldown) //subtracts health value & knocks the character back in the opposite direction
+            if (!onCooldown) //subtracts health value & knocks the character back in the opposite direction NOTE: needs finetuning
             {
                 isGrounded = false;
-                health--;
+                AudioSource.PlayClipAtPoint(hurtSound, this.transform.position);
+                currentHealth -= contactDamage;
                 if (facingRight)
                 {
                     myRB2D.velocity = new Vector2(hurtKick.x * -1, hurtKick.y);
@@ -178,7 +193,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (health <= 0)
+        if (currentHealth <= 0)
         {
             isAlive = false;
             DeathHandler();
@@ -199,6 +214,7 @@ public class PlayerController : MonoBehaviour
     }
     private void DeathHandler()
     {
+        AudioSource.PlayClipAtPoint(deathSound, this.transform.position);
         FindObjectOfType<GameSession>().AddToLives(-1);
         myRB2D.bodyType = RigidbodyType2D.Kinematic; 
         myRB2D.velocity = new Vector2(0f, 0f); //ensures the player model stays in the same space after dying, preventing camera drifting
@@ -207,6 +223,7 @@ public class PlayerController : MonoBehaviour
         if (FindObjectOfType<GameSession>().GameOver())
         {
             //display stuff
+            Debug.Log("game over");
             FindObjectOfType<LevelLoader>().BackToMainMenu();
         }
         else
@@ -214,5 +231,10 @@ public class PlayerController : MonoBehaviour
             //display stuff
             FindObjectOfType<LevelLoader>().RestartLevel();
         }
+    }
+
+    public float GetPlayerHealth()
+    {
+        return currentHealth;
     }
 }

@@ -12,7 +12,6 @@ public class LevelExit : MonoBehaviour {
         {
             if (!levelFinished)
             {
-                Debug.Log("Contact");
                 levelFinished = true;
                 Time.timeScale = slowMoFactor;
                 FindObjectOfType<LevelLoader>().LoadNextlevel();
