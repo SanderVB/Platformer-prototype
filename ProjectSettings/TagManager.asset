@@ -21,8 +21,8 @@ TagManager:
   - Enemy
   - Hazards
   - Interactibles
-  - 
-  - 
+  - Secret
+  - Killzone
   - 
   - 
   - 
@@ -51,12 +51,12 @@ TagManager:
   - name: Hazards
     uniqueID: 2845898337
     locked: 0
+  - name: Interactibles
+    uniqueID: 453939163
+    locked: 0
   - name: Player
     uniqueID: 1900925263
     locked: 0
   - name: Foreground
     uniqueID: 2806905613
-    locked: 0
-  - name: Interactibles
-    uniqueID: 453939163
     locked: 0

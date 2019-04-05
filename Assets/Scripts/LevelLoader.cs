@@ -9,7 +9,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] float loadDelay = 3f;
     [SerializeField] float respawnDelay = 1f;
     int currentSceneIndex;
-    bool sceneUpdated = false;
+    bool sceneUpdated, isLoading = false;
 
     private void Awake()
     {
@@ -27,16 +27,18 @@ public class LevelLoader : MonoBehaviour
     private void Start()
     {
         SetSceneIndex();
-        if (currentSceneIndex == 0) //for splash screen
-        {
-            StartCoroutine(WaitAndLoadGameLevel(1, loadDelay));
-        }
     }
 
     private void Update()
     {
         if (!sceneUpdated)
             SetSceneIndex();
+        if (currentSceneIndex == 0 && !isLoading) //for splash screen
+        {
+            isLoading = true;
+            StartCoroutine(WaitAndLoadGameLevel(1, loadDelay));
+        }
+
     }
 
     IEnumerator WaitAndLoadGameLevel(int loadIndex, float newLoadDelay)
@@ -46,12 +48,17 @@ public class LevelLoader : MonoBehaviour
         FindObjectOfType<MusicPlayer>().MusicChanger(loadIndex);
         sceneUpdated = false;
         Time.timeScale = 1f;
+        isLoading = false;
     }
 
     public void BackToMainMenu()
     {
-        Debug.Log("back to main");
         StartCoroutine(WaitAndLoadGameLevel(1, loadDelay));
+    }
+
+    public void GameOver()
+    {
+        StartCoroutine(WaitAndLoadGameLevel(0, loadDelay * 3));
     }
 
     public void LoadNextlevel()

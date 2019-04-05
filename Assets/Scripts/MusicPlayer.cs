@@ -7,7 +7,6 @@ public class MusicPlayer : MonoBehaviour
 
     [SerializeField] AudioClip[] levelMusic;
     [SerializeField] AudioClip winSound, loseSound;
-    [SerializeField] float soundVolume = .5f;
 
     private AudioSource musicPlayer;
     private AudioSource soundPlayer;
@@ -35,13 +34,28 @@ public class MusicPlayer : MonoBehaviour
 
     public void ResultSound(bool hasWon)
     {
+        musicPlayer.Pause();
         Debug.Log("speelt result geluidje: " + hasWon);
         if (hasWon)
+        {
             soundPlayer.clip = winSound;
+            soundPlayer.PlayOneShot(soundPlayer.clip);
+        }
         else
+        {
             soundPlayer.clip = loseSound;
+            StartCoroutine(GameOver());
+        }
+
+    }
+
+    IEnumerator GameOver()
+    {
+        //do stuff
+        yield return new WaitForSecondsRealtime(2);
         soundPlayer.PlayOneShot(soundPlayer.clip);
     }
+
 
     public void MusicChanger(int levelNumber) //changes music based on scene# being loaded
     {
@@ -49,8 +63,12 @@ public class MusicPlayer : MonoBehaviour
         {
             musicPlayer.clip = levelMusic[levelNumber];
             musicPlayer.Play();
+            soundPlayer.Stop();
         }
-        catch { Debug.LogError("Add more level songs in the music player object"); }
+        catch
+        {
+            Debug.LogError("Add more level songs in the music player object, check level: "+ levelNumber);
+        }
         /*switch (levelNumber)
         {
             case 0:

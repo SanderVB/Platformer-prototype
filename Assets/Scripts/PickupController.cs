@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PickupController : MonoBehaviour {
 
-    private enum PickupType { coin, extraLife}
+    private enum PickupType { coin, extraLife, battery}
     [SerializeField] PickupType pickupType;
     [SerializeField] AudioClip pickupSound;
     [SerializeField] int pickupValue;
@@ -23,6 +23,8 @@ public class PickupController : MonoBehaviour {
     {
         pickedUp = true;
         AudioSource.PlayClipAtPoint(pickupSound, this.transform.position);
+        if (pickupType == PickupType.battery)
+            FindObjectOfType<PlayerController>().ReplenishHealth(pickupValue);
         if(pickupType == PickupType.coin)
             FindObjectOfType<GameSession>().AddToScore(pickupValue);
         if (pickupType == PickupType.extraLife)

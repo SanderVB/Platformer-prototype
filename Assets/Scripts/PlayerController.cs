@@ -31,7 +31,8 @@ public class PlayerController : MonoBehaviour
     bool onCooldown, isDying = false;
     bool isGrounded, isJumping, hasHorizontalSpeed, facingRight;
 
-    float hurtTimer, jumpTimer;
+    float hurtTimer, jumpTimer;//, 
+    public float groundedTimer;
     public float currentHealth;
     float animationCooldown = 0.5f;
 
@@ -61,7 +62,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isAlive) { return; }
+        if (!isAlive) { return; } //if the player isn't alive, no functions are called and the control by input is taken away
 
         currentHealth -= Time.deltaTime;
 
@@ -72,6 +73,7 @@ public class PlayerController : MonoBehaviour
             Climb();
             FlipPlayer();
         }
+
         GroundCheck();
         HurtHandler();
     }
@@ -94,7 +96,24 @@ public class PlayerController : MonoBehaviour
     private void GroundCheck()
     {
         isGrounded = feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")); //checks is the collider on the bottom of the character is contact with objects tagged as Ground
-        myAnim.SetBool("isGrounded", isGrounded);
+        //myAnim.SetBool("isGrounded", isGrounded);
+        if(!isGrounded)
+        {
+            if (groundedTimer < .2f) //I wouldn't normally hardcode, but this is a one-off case that is never used again after fine-tuning (it prevents the hangtime animation from triggering too early)
+            {
+                groundedTimer += Time.deltaTime;
+            }
+            else
+            {
+                groundedTimer = 0f;
+                myAnim.SetBool("isGrounded", false);
+            }
+        }
+        else
+        {
+            groundedTimer = 0;
+            myAnim.SetBool("isGrounded", true);
+        }
 
         if (!isGrounded && myRB2D.velocity.y < -landThreshold) //used to trigger the landing animation, based on how high the velocity is (i.e. from how high the chararcter dropped)
         {
@@ -193,9 +212,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 || bodyCollider.IsTouchingLayers(LayerMask.GetMask("Killzone")))
         {
-            isAlive = false;
             DeathHandler();
         }
     }
@@ -214,27 +232,24 @@ public class PlayerController : MonoBehaviour
     }
     private void DeathHandler()
     {
+        isAlive = false;
         AudioSource.PlayClipAtPoint(deathSound, this.transform.position);
-        FindObjectOfType<GameSession>().AddToLives(-1);
+        FindObjectOfType<GameSession>().PlayerDied();
         myRB2D.bodyType = RigidbodyType2D.Kinematic; 
         myRB2D.velocity = new Vector2(0f, 0f); //ensures the player model stays in the same space after dying, preventing camera drifting
         myAnim.SetBool("isAlive", isAlive);
-
-        if (FindObjectOfType<GameSession>().GameOver())
-        {
-            //display stuff
-            Debug.Log("game over");
-            FindObjectOfType<LevelLoader>().BackToMainMenu();
-        }
-        else
-        {
-            //display stuff
-            FindObjectOfType<LevelLoader>().RestartLevel();
-        }
     }
 
     public float GetPlayerHealth()
     {
         return currentHealth;
     }
+
+    public void ReplenishHealth(float healthToAdd)
+    {
+        currentHealth += healthToAdd;
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+    }
+
 }

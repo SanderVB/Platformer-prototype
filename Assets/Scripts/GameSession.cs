@@ -58,8 +58,17 @@ public class GameSession : MonoBehaviour
         UIUpdate();
     }
 
-    public bool GameOver()
+    public void PlayerDied()
     {
-        return lives <= 0;
+        AddToLives(-1);
+        if (lives > 0)
+        {
+            FindObjectOfType<LevelLoader>().RestartLevel();
+        }
+        else
+        {
+            FindObjectOfType<MusicPlayer>().ResultSound(false);
+            FindObjectOfType<LevelLoader>().GameOver();
+        }
     }
 }

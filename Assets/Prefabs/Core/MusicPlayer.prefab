@@ -247,6 +247,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2190a6115252a994f8c911a632e327b8, type: 3}
   - {fileID: 8300000, guid: ce6d78b40c1e59e46ada3edd7cea9ceb, type: 3}
   - {fileID: 8300000, guid: 429fd673792848248ae871f999b15300, type: 3}
-  winSound: {fileID: 0}
-  loseSound: {fileID: 0}
-  soundVolume: 0.5
+  - {fileID: 8300000, guid: d840911ab63ca1e43a643da5b951a2a7, type: 3}
+  winSound: {fileID: 8300000, guid: c9e0babfa0c2b0145b75436e504ac749, type: 3}
+  loseSound: {fileID: 8300000, guid: a2e7591eeb05604459f264be71bb21fe, type: 3}
