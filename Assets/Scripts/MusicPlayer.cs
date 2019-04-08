@@ -52,7 +52,7 @@ public class MusicPlayer : MonoBehaviour
     IEnumerator GameOver()
     {
         //do stuff
-        yield return new WaitForSecondsRealtime(2);
+        yield return new WaitForSecondsRealtime(soundPlayer.clip.length);
         soundPlayer.PlayOneShot(soundPlayer.clip);
     }
 

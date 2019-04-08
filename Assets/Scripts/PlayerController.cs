@@ -28,15 +28,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] AudioClip deathSound;
 
     bool isAlive = true;
-    bool onCooldown, isDying = false;
+    bool onCooldown = false;
     bool isGrounded, isJumping, hasHorizontalSpeed, facingRight;
 
     float hurtTimer, jumpTimer;//, 
     public float groundedTimer;
     public float currentHealth;
     float animationCooldown = 0.5f;
-
-    Coroutine cooldownTimer;
 
     //Cached references
     Rigidbody2D myRB2D;
@@ -207,7 +205,7 @@ public class PlayerController : MonoBehaviour
                 {
                     myRB2D.velocity = new Vector2(0f, 0f);
                 }
-                cooldownTimer = StartCoroutine(CooldownTimer()); //see below for description
+                StartCoroutine(CooldownTimer()); //see below for description
                 hurtTimer = 0;
             }
         }

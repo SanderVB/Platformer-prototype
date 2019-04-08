@@ -64,7 +64,7 @@ public class LevelLoader : MonoBehaviour
     public void LoadNextlevel()
     {
         if (currentSceneIndex < SceneManager.sceneCountInBuildSettings - 1) //prevents 'loading outside of build-index' error & goes back to splash atm
-            StartCoroutine(WaitAndLoadGameLevel(currentSceneIndex + 1, respawnDelay));
+            StartCoroutine(WaitAndLoadGameLevel(currentSceneIndex + 1, loadDelay));
         else
             WaitAndLoadGameLevel(0, loadDelay);
     }

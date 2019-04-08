@@ -22,8 +22,6 @@ public class SecretAreaTilemap : MonoBehaviour {
     {
         if (collision.tag == "Player" && !secretAreaActive)
         {
-            Debug.Log("in het geheim");
-            Debug.Log(alphaFactor);
             secretAreaActive = true;
             thisTilemap.color = secretColor;
         }
@@ -33,7 +31,6 @@ public class SecretAreaTilemap : MonoBehaviour {
     {
         if (collision.tag == "Player" && secretAreaActive)
         {
-            Debug.Log("uit het geheim");
             secretAreaActive = false;
             thisTilemap.color = originalColor;
         }
