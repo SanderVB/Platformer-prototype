@@ -102,8 +102,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.36, y: 1}
+  m_Offset: {x: 0, y: -0.05}
+  m_Size: {x: 0.36, y: 0.77}
   m_Direction: 0
 --- !u!95 &95767913252422160
 Animator:
@@ -138,7 +138,7 @@ MonoBehaviour:
   contactDamage: 10
   runSpeed: 8
   jumpSpeed: 16
-  climbSpeed: 16
+  climbSpeed: 12
   slideSpeed: 1
   jumpCooldown: 0.25
   landThreshold: 20
@@ -148,6 +148,7 @@ MonoBehaviour:
   jumpSound: {fileID: 8300000, guid: 9e051a897410e9646a5891d9a2f0add7, type: 3}
   hurtSound: {fileID: 8300000, guid: 4dc55b762e244a948963515c8b19c6cc, type: 3}
   deathSound: {fileID: 8300000, guid: af47a889159f57e459f2526e7f61b8bc, type: 3}
+  groundedTimer: 0
   currentHealth: 0
 --- !u!212 &212021536749384200
 SpriteRenderer:
@@ -182,7 +183,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1900925263
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 8ebefeb5f221ef24f93674e2772e021b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

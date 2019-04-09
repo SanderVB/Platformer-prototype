@@ -35,7 +35,7 @@ public class MusicPlayer : MonoBehaviour
     public void ResultSound(bool hasWon)
     {
         musicPlayer.Pause();
-        Debug.Log("speelt result geluidje: " + hasWon);
+
         if (hasWon)
         {
             soundPlayer.clip = winSound;

@@ -15,6 +15,7 @@ public class LevelExit : MonoBehaviour {
                 levelFinished = true;
                 Time.timeScale = slowMoFactor;
                 FindObjectOfType<MusicPlayer>().ResultSound(true);
+                FindObjectOfType<PlayerController>().SetLevelFinished();
                 FindObjectOfType<LevelLoader>().LoadNextlevel();
             }
         }

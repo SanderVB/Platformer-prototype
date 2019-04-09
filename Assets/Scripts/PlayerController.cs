@@ -28,13 +28,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] AudioClip deathSound;
 
     bool isAlive = true;
-    bool onCooldown = false;
-    bool isGrounded, isJumping, hasHorizontalSpeed, facingRight;
+    bool onCooldown, levelFinished = false;
+    bool isGrounded, isJumping, isSwimming, hasHorizontalSpeed, facingRight;
 
-    float hurtTimer, jumpTimer;//, 
+    float hurtTimer, jumpTimer, baseAnimSpeed;
     public float groundedTimer;
     public float currentHealth;
     float animationCooldown = 0.5f;
+    Vector2 baseVelocity;
 
     //Cached references
     Rigidbody2D myRB2D;
@@ -55,12 +56,14 @@ public class PlayerController : MonoBehaviour
         myAnim = GetComponent<Animator>();
         bodyCollider = GetComponent<CapsuleCollider2D>();
         feetCollider = GetComponent<BoxCollider2D>();
+        baseAnimSpeed = myAnim.speed;
+        baseVelocity = myRB2D.velocity;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isAlive) { return; } //if the player isn't alive, no functions are called and the control by input is taken away
+        if (!isAlive || levelFinished) { return; } //if the player isn't alive, no functions are called and the control by input is taken away
 
         currentHealth -= Time.deltaTime;
 
@@ -68,7 +71,7 @@ public class PlayerController : MonoBehaviour
         {
             Run();
             Jump();
-            Climb();
+            Swimming();
             FlipPlayer();
         }
 
@@ -84,8 +87,11 @@ public class PlayerController : MonoBehaviour
             facingRight = true;
         else
             facingRight = false;
-
-        Vector2 playerVelocity = new Vector2(controlThrow * runSpeed, myRB2D.velocity.y); //sets character velocity based on the received input value
+        Vector2 playerVelocity;
+        if (!isSwimming)
+            playerVelocity = new Vector2(controlThrow * runSpeed, myRB2D.velocity.y); //sets character velocity based on the received input value
+        else
+            playerVelocity = new Vector2(controlThrow * runSpeed/2, myRB2D.velocity.y);
         myRB2D.velocity = playerVelocity;
 
         myAnim.SetBool("isRunning", hasHorizontalSpeed);
@@ -125,7 +131,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (CrossPlatformInputManager.GetButtonDown("Jump") && isGrounded) //is the jump button pressed and is the character on solid ground? Then jump
+        if (CrossPlatformInputManager.GetButtonDown("Jump") && isGrounded && !isSwimming) //is the jump button pressed and is the character on solid ground? Then jump
         {
             isJumping = true;
             AudioSource.PlayClipAtPoint(jumpSound, this.transform.position);
@@ -147,18 +153,23 @@ public class PlayerController : MonoBehaviour
         myAnim.SetBool("isJumping", isJumping);
     }
 
-    private void Climb()
+    private void Swimming()
     {
-        if (feetCollider.IsTouchingLayers(LayerMask.GetMask("Climbing")))
+        if (feetCollider.IsTouchingLayers(LayerMask.GetMask("Water")))
         {
+            isSwimming = true; 
+            isJumping = true;
+            myAnim.speed = baseAnimSpeed / 2;
             Vector2 climbVelocity = new Vector2(myRB2D.velocity.x, climbSpeed);
             Vector2 slideVelocity = new Vector2(myRB2D.velocity.x, -slideSpeed);
             if (CrossPlatformInputManager.GetButtonDown("Jump"))
             {
                 myRB2D.velocity = climbVelocity;
+                isJumping = true;
             }
             else
             {
+                isJumping = false;
                 if (myRB2D.velocity.y > -slideSpeed) //makes the character slide down gradually 
                 {
                     float currentSpeed = myRB2D.velocity.y;
@@ -169,6 +180,11 @@ public class PlayerController : MonoBehaviour
                     myRB2D.velocity = slideVelocity;
                 }
             }
+        }
+        else
+        {
+            myAnim.speed = baseAnimSpeed;
+            isSwimming = false;
         }
     }
 
@@ -221,10 +237,10 @@ public class PlayerController : MonoBehaviour
         if (!onCooldown)
         {
             onCooldown = true;
-            myAnim.SetBool("Cooldown", onCooldown);
+            myAnim.SetBool("cooldown", onCooldown);
             yield return new WaitForSeconds(animationCooldown);
             onCooldown = false;
-            myAnim.SetBool("Cooldown", onCooldown);
+            myAnim.SetBool("cooldown", onCooldown);
         }
 
     }
@@ -250,4 +266,11 @@ public class PlayerController : MonoBehaviour
             currentHealth = maxHealth;
     }
 
+    public void SetLevelFinished()
+    {
+        myAnim.SetBool("celebration", true); //TODO add celebration animation
+        myRB2D.velocity = new Vector2(0f, 0f); //ensures the player model stays in the same space after dying, preventing camera drifting
+
+        levelFinished = true;
+    }
 }

@@ -8,7 +8,7 @@ public class BackgroundScroll : MonoBehaviour {
     [SerializeField] bool parallax;
     [SerializeField] bool verticalMovement;
     [SerializeField] float backgroundSize;
-    [SerializeField] float parallaxSpeed, parallaxVerticalSpeed;
+    [SerializeField][Range(0,1)] float parallaxSpeed, parallaxVerticalSpeed;
 
     private Transform cameraTransform;
     private Transform[] layers;
