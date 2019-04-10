@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScenePersist : MonoBehaviour {
+public class ScenePersist : MonoBehaviour
+{
 
     int startingSceneIndex;
 
@@ -16,13 +17,13 @@ public class ScenePersist : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         startingSceneIndex = FindObjectOfType<LevelLoader>().GetSceneIndex();
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
         int currentSceneIndex = FindObjectOfType<LevelLoader>().GetSceneIndex();
 

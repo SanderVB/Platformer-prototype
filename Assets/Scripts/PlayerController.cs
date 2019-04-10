@@ -135,11 +135,15 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = true;
             AudioSource.PlayClipAtPoint(jumpSound, this.transform.position);
-            Vector2 jumpVelocityToAdd = new Vector2(0f, jumpSpeed);
-            myRB2D.velocity += jumpVelocityToAdd;
+            
+            /*Vector2 jumpVelocityToAdd = new Vector2(0f, jumpSpeed);
+            myRB2D.velocity += jumpVelocityToAdd;*/ //old jump method, works better with vertical movement but needs extra protection for double jump bug when jumping after jumping up a ledge
+
+            Vector2 jumpVelocity = new Vector2(myRB2D.velocity.x, jumpSpeed);
+            myRB2D.velocity = jumpVelocity;
         }
 
-        if(isJumping) //this was added to fix the animation not switching properly from idle to jumping when pressing jump repeadetly
+        if (isJumping) //this was added to fix the animation not switching properly from idle to jumping when pressing jump repeatedly
         {
             if (jumpTimer < jumpCooldown)
                 jumpTimer += Time.deltaTime;
@@ -157,12 +161,12 @@ public class PlayerController : MonoBehaviour
     {
         if (feetCollider.IsTouchingLayers(LayerMask.GetMask("Water")))
         {
-            isSwimming = true; 
-            isJumping = true;
-            myAnim.speed = baseAnimSpeed / 2;
+            isSwimming = true;
+            //myAnim.SetBool("isSwimming", true);
+            myAnim.speed = baseAnimSpeed / 2; //remove this after adding swimming animation
             Vector2 climbVelocity = new Vector2(myRB2D.velocity.x, climbSpeed);
             Vector2 slideVelocity = new Vector2(myRB2D.velocity.x, -slideSpeed);
-            if (CrossPlatformInputManager.GetButtonDown("Jump"))
+            if (CrossPlatformInputManager.GetButtonDown("Jump") && !isJumping)
             {
                 myRB2D.velocity = climbVelocity;
                 isJumping = true;
@@ -204,7 +208,7 @@ public class PlayerController : MonoBehaviour
 
         else if (bodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")) || bodyCollider.IsTouchingLayers(LayerMask.GetMask("Hazards")))
         {
-            if (!onCooldown) //subtracts health value & knocks the character back in the opposite direction NOTE: needs finetuning
+            if (!onCooldown) //subtracts health value & knocks the character back in the opposite direction NOTE: needs finetuning, sometimes picks the wrong direction
             {
                 isGrounded = false;
                 AudioSource.PlayClipAtPoint(hurtSound, this.transform.position);
